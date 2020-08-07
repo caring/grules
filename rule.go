@@ -11,22 +11,6 @@ const (
 	OperatorOr = "or"
 )
 
-// defaultComparators is a map of all the default comparators that
-// a new engine should include
-var defaultComparators = map[string]Comparator{
-	"eq":        equal,
-	"neq":       notEqual,
-	"gt":        greaterThan,
-	"gte":       greaterThanEqual,
-	"lt":        lessThan,
-	"lte":       lessThanEqual,
-	"contains":  contains,
-	"ncontains": notContains,
-	"oneof":     oneOf,
-	"noneof":    noneOf,
-	"regex":     regex,
-}
-
 // Rule is a our smallest unit of measure, each rule will be
 // evaluated separately. The comparator is the logical operation to be
 // performed, the path is the path into a map, delimited by '.', and
@@ -121,8 +105,28 @@ func NewJSONEngine(raw json.RawMessage) (Engine, error) {
 	if err != nil {
 		return Engine{}, err
 	}
-	e.comparators = defaultComparators
+	e.comparators = defaultComparators()
 	return e, nil
+}
+
+func defaultComparators() map[string]Comparator {
+	// defaultComparators is a map of all the default comparators that
+	// a new engine should include
+	var defaultComparators = map[string]Comparator{
+		"eq":        equal,
+		"neq":       notEqual,
+		"gt":        greaterThan,
+		"gte":       greaterThanEqual,
+		"lt":        lessThan,
+		"lte":       lessThanEqual,
+		"contains":  contains,
+		"ncontains": notContains,
+		"oneof":     oneOf,
+		"noneof":    noneOf,
+		"regex":     regex,
+	}
+
+	return defaultComparators
 }
 
 // AddComparator will add a new comparator that can be used in the
